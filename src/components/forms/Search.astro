@@ -1,0 +1,70 @@
+---
+import '@pagefind/default-ui/css/ui.css';
+import Container from '@components/layout/Container';
+---
+
+<div class="site-search pt-6 pb-12 bg-white">
+  <Container>
+    <div id="pagefind"></div>
+  </Container>
+</div>
+
+<script>
+  import { PagefindUI } from '@pagefind/default-ui';
+  new PagefindUI({
+    element: '#pagefind',
+    debounceTimeoutMs: 500,
+    showEmptyFilters: false,
+    showSubResults: true,
+    showImages: false,
+    translations: {
+      clear_search: '',
+      zero_results: '[SEARCH_TERM]の検索結果はありません',
+      alt_search: '[SEARCH_TERM]の検索結果はありませんでした。[DIFFERENT_TERM]の検索結果を表示しています',
+      search_suggestion: '[SEARCH_TERM]の検索結果はありませんでした。次のいずれかの検索を試してください'
+    }
+  });
+</script>
+
+<style is:global>
+  :root {
+    --pagefind-ui-scale: 0.7;
+    --pagefind-ui-primary: --color-primary;
+    --pagefind-ui-text: #393939;
+    --pagefind-ui-background: #ffffff;
+    --pagefind-ui-border: #eeeeee;
+    --pagefind-ui-tag: #eeeeee;
+    --pagefind-ui-border-width: 2px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-image-border-radius: 8px;
+    --pagefind-ui-image-box-ratio: 3 / 2;
+    --pagefind-ui-font: sans-serif;
+  }
+
+  .pagefind-ui__search-clear::before {
+    content: '\e5cd';
+    font-family: 'Material Icons';
+    font-size: 1rem;
+  }
+
+  .site-search {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    top: 110px;
+    width: 100%;
+    z-index: 1000;
+    height: 0;
+    transition: opacity 0.2s;
+
+    &.show {
+      visibility: visible;
+      height: auto;
+      opacity: 1;
+    }
+  }
+
+  .site-search input::placeholder {
+    font-size: small;
+  }
+</style>

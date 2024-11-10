@@ -1,0 +1,129 @@
+---
+import Layout from '@layouts/Layout.astro';
+// import PageHeader from '@components/common/PageHeader.astro';
+import Container from '@components/layout/Container';
+import BlogContentWrapper from '@components/wp/BlogContentWrapper.astro';
+import BlockRenderer from '@components/wp/BlockRenderer.astro';
+import DetailPagination from '@components/ui/DetailPagination.astro';
+import type { Block } from '@wp-block-tools/styles';
+import type { Post } from '@features/news/types/post';
+import type { Category } from '@features/news/types/category';
+import { getAllPosts } from '@features/news/api/getAllPosts';
+import { getContentNodeByURI } from '@features/news/api/getContentNodeByURI';
+import Heading from '@components/common/Heading';
+import Image from '@components/common/Image.astro';
+import Gallery from '@components/wp/Gallery.astro';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+
+  const paths = posts.map((post: Post) => {
+    return {
+      params: { slug: post.slug },
+      props: { post }
+    };
+  });
+
+  return paths;
+}
+
+const { post } = Astro.props as { post: Post };
+
+if (post.uri === undefined) {
+  return {
+    notFound: true
+  };
+}
+
+let data;
+try {
+  data = await getContentNodeByURI(post.uri);
+} catch (error) {
+  return {
+    notFound: true
+  };
+}
+
+const nodeByUri = data?.nodeByUri || null;
+
+if (nodeByUri === undefined || nodeByUri === null) {
+  return {
+    notFound: true
+  };
+}
+
+const blocks = Array.isArray(nodeByUri.blocks) ? (nodeByUri.blocks as Block[]) : [];
+const seo = nodeByUri.seo || {};
+const postId = nodeByUri.databaseId;
+const categories = nodeByUri.categories || { nodes: [] };
+const acfContents = nodeByUri.acfTest || {};
+---
+
+<Layout title={seo.title || post.title} description={seo.metaDesc || ''}>
+  <article class={`pt-32 post-${postId}`}>
+    <Container size="sm" classes="post-content">
+      <div data-pagefind-body>
+        <Heading level={1} content={post.title} classes="mb-7" />
+        <div class="flex justify-between mb-10">
+          {
+            categories.nodes.length > 0 && (
+              <>
+                <ul class="flex categoryList">
+                  {categories.nodes.map((category: Category) => (
+                    <li class="text-sm">{category.name}</li>
+                  ))}
+                </ul>
+                <div class="text-sm">{new Date(post.date).toLocaleDateString()}</div>
+              </>
+            )
+          }
+        </div>
+        <div class="my-20">
+          <Heading level={2} content="Blocks Area" classes="mb-7" />
+          <BlogContentWrapper>
+            <BlockRenderer blocks={blocks} postId={postId} />
+          </BlogContentWrapper>
+        </div>
+        {
+          acfContents.postText && (
+            <div class="bg-gray-100 p-5 mb-10">
+              <p>{acfContents.postText}</p>
+            </div>
+          )
+        }
+        {
+          acfContents.postImage?.node && (
+            <div class="mb-10">
+              <Image
+                src={acfContents.postImage.node.mediaItemUrl}
+                srcSet={acfContents.postImage.node.srcSet}
+                alt={acfContents.postImage.node.altText}
+              />
+            </div>
+          )
+        }
+        {
+          acfContents.postGallery?.nodes && (
+            <div class="mb-10">
+              <Gallery images={acfContents.postGallery.nodes} />
+            </div>
+          )
+        }
+      </div>
+      <DetailPagination prev={nodeByUri.prevPost} next={nodeByUri.nextPost} />
+    </Container>
+  </article>
+</Layout>
+
+<style>
+  .categoryList {
+    li {
+      &:not(:last-child) {
+        &::after {
+          content: '/';
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+</style>

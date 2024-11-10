@@ -1,0 +1,28 @@
+/* styles.module.css */
+.heading {
+  font-weight: bold;
+}
+
+.xs {
+  font-size: 0.9rem;
+}
+
+.sm {
+  font-size: 1.15rem;
+}
+
+.md {
+  font-size: 1.3rem;
+}
+
+.lg {
+  font-size: 1.5rem;
+}
+
+.xlg {
+  font-size: 1.8rem;
+}
+
+.xxlg {
+  font-size: 2rem;
+}

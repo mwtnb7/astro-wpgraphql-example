@@ -1,0 +1,16 @@
+---
+import PageNav from '@components/ui/PageNav.astro';
+import { getAllCategories } from '../api/getAllCategories';
+
+const categories = await getAllCategories();
+
+let links = [];
+if (categories && categories.length) {
+  links = categories.map((category: any) => ({
+    label: category.name,
+    href: `/news/category/${category.slug}/`
+  }));
+}
+---
+
+<PageNav links={links} />

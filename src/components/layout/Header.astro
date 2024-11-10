@@ -1,0 +1,30 @@
+---
+import type { HTMLTag } from 'astro/types';
+import Logo from '@components/common/Logo.astro';
+import HeaderNav from './HeaderNav.astro';
+import SearchButton from '@components/common/SearchButton.astro';
+
+const { id } = Astro.props;
+
+const Element: HTMLTag = id === 'home' ? 'h1' : 'div';
+---
+
+<header class="bg-white">
+  <div class="flex justify-between py-10 px-7 lg:px-10">
+    <Element class="logo">
+      <Logo />
+    </Element>
+    <div class="flex items-center">
+      <HeaderNav />
+      <div class="ml-10">
+        <SearchButton />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .logo {
+    width: 10rem;
+  }
+</style>

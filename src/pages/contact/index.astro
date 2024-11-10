@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Section from '@components/layout/Section';
+import Container from '@components/layout/Container';
+import PageHeader from '@components/layout/PageHeader.astro';
+// import Heading from '@components/elements/Heading.astro';
+import ContactForm7 from '@components/wp/ContactForm7';
+// import type { Block } from '@wp-block-tools/styles';
+// import { getContentNodeByURI } from '@features/wp/api.ts';
+
+// const response = await getContentNodeByURI('/contact/');
+// const { data } = await response.json();
+
+// const blocks = (data.nodeByUri?.blocks || []) as Block[];
+// const seo = data.nodeByUri?.seo;
+// const postId = data.nodeByUri?.databaseId;
+---
+
+<Layout title="お問い合わせ" description="お問い合わせページです。メールフォームからお問い合わせいただけます。">
+  <PageHeader main="お問い合わせ" sub="CONTACT" />
+  <Section size="lg">
+    <Container size="sm">
+      <ContactForm7 client:load formId="4" />
+    </Container>
+  </Section>
+</Layout>
+
+<style is:global>
+  .form-block {
+    @apply block md:flex mb-5 md:mb-10;
+
+    label {
+      @apply w-full pb-2 md:pb-0 md:w-1/4;
+    }
+
+    .form-content {
+      @apply w-full md:w-3/4;
+    }
+
+    input {
+      @apply appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight transition focus:outline-none focus:bg-white focus:border-gray-500;
+    }
+
+    textarea {
+      @apply appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight transition focus:outline-none focus:bg-white focus:border-gray-500;
+    }
+
+    .form-submit {
+      .material-icons {
+        font-size: 1.2rem;
+        margin-left: 0.5rem;
+      }
+    }
+
+    .error-message {
+      @apply text-red-500 text-sm;
+    }
+  }
+</style>

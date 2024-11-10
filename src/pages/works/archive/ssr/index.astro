@@ -1,0 +1,152 @@
+---
+export const prerender = false;
+
+import Layout from '@layouts/Layout.astro';
+import Section from '@components/layout/Section';
+import Container from '@components/layout/Container';
+import PageHeader from '@components/layout/PageHeader.astro';
+import Heading from '@components/common/Heading';
+import PostItem from '@components/posts/PostItem.astro';
+import type { Work } from '@features/works/types/work';
+import type { Term } from '@features/works/types/term';
+
+const { searchParams } = Astro.url;
+const paramGenres = searchParams.getAll('genres[]');
+const paramsAreas = searchParams.getAll('areas[]');
+const paramKeyword = searchParams.get('q') || '';
+
+const Categories = { Genre: [], Area: [] };
+let filteredWorks: Work[] = [];
+try {
+  const response = await fetch(`${Astro.url.origin}/api/works.json`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const { works } = await response.json();
+
+  filteredWorks = works as Work[];
+  filteredWorks = works
+    .filter(
+      (work: Work) =>
+        paramGenres.length === 0 ||
+        work.terms.nodes.some((node: Term) => paramGenres.includes(node.termTaxonomyId.toString()))
+    )
+    .filter(
+      (work: Work) =>
+        paramsAreas.length === 0 ||
+        work.terms.nodes.some((node: Term) => paramsAreas.includes(node.termTaxonomyId.toString()))
+    )
+    .filter((work: Work) => work.title.includes(paramKeyword));
+
+  const categoriesRes = await fetch(`${Astro.url.origin}/api/work-category.json`);
+  if (!categoriesRes.ok) {
+    throw new Error(`HTTP error! status: ${categoriesRes.status}`);
+  }
+  const categoriesData = await categoriesRes.json();
+
+  const areaCategoriesRes = await fetch(`${Astro.url.origin}/api/work-area-category.json`);
+  if (!areaCategoriesRes.ok) {
+    throw new Error(`HTTP error! status: ${areaCategoriesRes.status}`);
+  }
+  const areaCategoriesData = await areaCategoriesRes.json();
+
+  Categories.Genre = categoriesData.terms || [];
+  Categories.Area = areaCategoriesData.terms || [];
+} catch (error) {
+  console.error('Error:', error);
+}
+---
+
+<Layout title="SSR - 制作実績" description="">
+  <PageHeader main="制作実績" sub="Works" />
+  <form action="./">
+    <Section size="md" vertical="top">
+      <Container>
+        <Heading level={2} content="ジャンル" classes="mb-4" />
+        <ul class="flex flex-wrap gap-4">
+          {
+            Categories.Genre.map((term: any) => (
+              <li class="flex items-center">
+                <label for={term.slug} class="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id={term.slug}
+                    name="genres[]"
+                    value={term.termTaxonomyId}
+                    checked={paramGenres.includes(term.termTaxonomyId.toString())}
+                    class="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                  <span class="ml-2">{term.name}</span>
+                </label>
+              </li>
+            ))
+          }
+        </ul>
+      </Container>
+    </Section>
+    <Section size="xs" vertical="top">
+      <Container>
+        <Heading level={2} content="エリア" classes="mb-4" />
+        <ul class="flex flex-wrap gap-4">
+          {
+            Categories.Area.map((term: any) => (
+              <li class="flex items-center">
+                <label for={term.slug} class="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id={term.slug}
+                    name="areas[]"
+                    value={term.termTaxonomyId}
+                    checked={paramsAreas.includes(term.termTaxonomyId.toString())}
+                    class="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                  <span class="ml-2">{term.name}</span>
+                </label>
+              </li>
+            ))
+          }
+        </ul>
+      </Container>
+    </Section>
+    <Section size="xs" vertical="top">
+      <Container>
+        <Heading level={2} content="キーワード検索" classes="mb-4" />
+        <input
+          type="text"
+          name="q"
+          value=`${paramKeyword || ''}`
+          placeholder="キーワードを入力してください。"
+          class="bg-gray-50
+          border
+          border-gray-300
+          text-gray-900
+          text-sm
+          rounded-lg
+          focus:ring-blue-500
+          focus:border-blue-500
+          block
+          w-full
+          max-w-xl
+          p-2.5"
+        />
+      </Container>
+    </Section>
+    <div class="text-center pt-10">
+      <button type="submit" class="bg-blue-600 text-white py-2 px-6 hover:opacity-70 hover:transition-opacity">
+        検索
+      </button>
+    </div>
+  </form>
+  <Section size="lg">
+    <Container>
+      <Heading level={2} content="絞り込み結果" classes="mb-4" />
+      {
+        filteredWorks.length === 0 ? (
+          <p class="text-center py-10">条件を変更してください。</p>
+        ) : (
+          filteredWorks.map((post: any) => <PostItem title={post.title} href={post.uri} date={post.date} />)
+        )
+      }
+    </Container>
+  </Section>
+</Layout>

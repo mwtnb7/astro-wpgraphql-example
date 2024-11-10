@@ -1,0 +1,24 @@
+---
+import Button from '@components/common/Button';
+
+type Props = {
+  links: {
+    label: string;
+    href: string;
+  }[];
+};
+
+const { links } = Astro.props;
+---
+
+{
+  links && links.length > 0 && (
+    <ul class="flex mb-5">
+      {links.map((link) => (
+        <li>
+          <Button label={link.label} href={link.href} />
+        </li>
+      ))}
+    </ul>
+  )
+}

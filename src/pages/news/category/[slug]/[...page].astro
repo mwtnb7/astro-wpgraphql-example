@@ -1,0 +1,76 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Section from '@components/layout/Section';
+import Container from '@components/layout/Container';
+import PageHeader from '@components/layout/PageHeader.astro';
+import Heading from '@components/common/Heading';
+import Pagination from '@components/ui/Pagination.astro';
+import PostItem from '@components/posts/PostItem.astro';
+import CategoryArchiveNav from '@features/news/components/CategoryArchiveNav.astro';
+import DateArchiveNav from '@features/news/components/DateArchiveNav.astro';
+import type { GetStaticPathsOptions } from 'astro';
+import type { PaginationData } from '@features/news/types/archive';
+import type { Post } from '@features/news/types/post';
+import type { Category } from '@features/news/types/category';
+import { getAllPosts } from '@features/news/api/getAllPosts';
+import { getAllCategories } from '@features/news/api/getAllCategories';
+
+export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
+  const allPosts = await getAllPosts();
+  const allCategories = await getAllCategories();
+
+  return allCategories.flatMap((category: Category) => {
+    const slug = category.slug;
+    const filteredPosts = allPosts.filter((post: Post) =>
+      post.categories.nodes.some((category: Category) => category.slug === slug)
+    );
+
+    // Create paginate pages
+    return paginate(filteredPosts, {
+      params: { slug: slug },
+      pageSize: 5,
+      props: {
+        categoryName: category.name
+      }
+    });
+  });
+};
+
+// Props
+const { page, categoryName } = Astro.props as {
+  page: PaginationData;
+  categoryName: string;
+};
+
+// Variables
+const posts = page.data || [];
+
+// SEO
+const baseTitle = `お知らせ`;
+const baseDescription = `${categoryName}カテゴリーの${baseTitle}一覧ページです。`;
+const seoTitle =
+  page?.currentPage && page?.currentPage !== 1
+    ? `${baseTitle} | ${page.currentPage}ページ目 (${page.lastPage}ページ中)`
+    : `${categoryName} | ${baseTitle}`;
+const seoDescription = page.currentPage !== 1 ? `${page.currentPage}ページ目 | ${baseDescription}` : baseDescription;
+---
+
+<Layout title={seoTitle} description={seoDescription}>
+  <PageHeader main="お知らせ" sub="News" />
+  <Section size="md">
+    <Container size="sm">
+      <CategoryArchiveNav />
+      <DateArchiveNav />
+      <Heading level={2} content=`${categoryName}一覧` ` classes="mb-8" />
+      {
+        posts.length === 0 ? (
+          <p class="text-center py-10">現在記事がありません。</p>
+        ) : (
+          posts.map((post: Post) => <PostItem title={post.title} href={post.uri} date={post.date} />)
+        )
+      }
+      <Pagination page={page} />
+    </Container>
+  </Section>
+</Layout>
+@components/layouts/Section@components/layouts/Container

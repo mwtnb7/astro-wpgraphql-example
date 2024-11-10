@@ -1,0 +1,10 @@
+---
+import Layout from '@layouts/Layout.astro';
+import PageHeader from '@components/layout/PageHeader.astro';
+import WorksSearch from '@features/works/components/WorksSearch';
+---
+
+<Layout title="CSR - 制作実績" description="">
+  <PageHeader main="制作実績" sub="Works" />
+  <WorksSearch client:load />
+</Layout>

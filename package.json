@@ -1,0 +1,36 @@
+{
+  "name": "astro-wpgraphql-example",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.4.1",
+    "@astrojs/node": "^8.2.0",
+    "@astrojs/react": "^3.0.10",
+    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vercel": "^7.6.0",
+    "@pagefind/default-ui": "^1.0.4",
+    "@splidejs/splide": "^4.1.4",
+    "@types/react": "^18.2.63",
+    "@types/react-dom": "^18.2.19",
+    "astro": "^4.1.2",
+    "dompurify": "^3.1.0",
+    "material-icons": "^1.13.12",
+    "pagefind": "^1.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.3",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "postcss-import": "^16.0.0",
+    "postcss-nesting": "^12.0.2"
+  }
+}

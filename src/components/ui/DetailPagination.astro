@@ -1,0 +1,24 @@
+---
+import PaginationPrevNext from '@components/ui/PaginationPrevNext.astro';
+
+interface Props {
+  prev: {
+    title: string;
+    uri: string;
+  };
+  next: {
+    title: string;
+    uri: string;
+  };
+}
+
+const { prev, next } = Astro.props as Props;
+
+const prevHref = prev === null ? '' : prev.uri || '';
+const nextHref = next === null ? '' : next.uri || '';
+---
+
+<div class="flex justify-between mt-10">
+  <PaginationPrevNext type="prev" href={prevHref} />
+  <PaginationPrevNext type="next" href={nextHref} />
+</div>

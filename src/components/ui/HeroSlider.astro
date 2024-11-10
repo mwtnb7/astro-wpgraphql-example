@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import '@splidejs/splide/css';
+
+interface Props {
+  slides: ImageMetadata[];
+}
+// interface Props {
+// 	slides: { href: string; image: ImageMetadata }[];
+// }
+
+const { slides } = Astro.props;
+---
+
+<section class="splide" aria-labelledby="carousel-heading">
+  <div class="splide__track">
+    <ul class="splide__list">
+      {
+        slides.map((item) => (
+          <li class="splide__slide">
+            <Image
+              src={item}
+              widths={[240, 540, 720, item.width]}
+              sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${item.width}px`}
+              alt=""
+              quality="mid"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- <script>
+	function splide() {
+		Splide(".splide", {
+			type: "loop",
+			perPage: 3,
+			perMove: 1,
+			gap: "1rem",
+			pagination: false,
+			breakpoints: {
+				768: {
+					perPage: 1,
+				},
+			},
+		}).mount();
+	}
+	splide();
+</script> -->
+<script is:inline src="
+https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js
+"></script>
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Splide('.splide', {
+      type: 'loop',
+      perPage: 3,
+      perMove: 1,
+      gap: '1rem',
+      pagination: false,
+      breakpoints: {
+        768: {
+          perPage: 1
+        }
+      }
+    }).mount();
+  });
+</script>

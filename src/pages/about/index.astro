@@ -1,0 +1,48 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Section from '@components/layout/Section';
+import Container from '@components/layout/Container';
+import PageHeader from '@components/layout/PageHeader.astro';
+import Heading from '@components/common/Heading';
+import HeroSlider from '@components/ui/HeroSlider.astro';
+import { Image } from 'astro:assets';
+
+// images
+import slide01 from '@assets/images/img-photo-01.jpeg';
+import slide02 from '@assets/images/img-photo-02.jpeg';
+import slide03 from '@assets/images/img-photo-03.jpeg';
+
+const images = [slide01, slide02, slide03];
+---
+
+<Layout title="お問い合わせ" description="下層ページのサンプルです。">
+  <PageHeader main="下層ページ" sub="About" mainTag="div" />
+  <Section size="lg">
+    <Container>
+      <Heading level={2} content="見出し2" classes="mb-5" />
+      <p class="mb-7">
+        テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+      </p>
+      <Image
+        src={slide01}
+        widths={[240, 540, 720, slide01.width]}
+        sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${slide01.width}px`}
+        alt=""
+        quality="mid"
+      />
+      <Section size="sm">
+        <Heading level={3} content="見出し3" classes="mb-5" />
+        <p class="mb-7">
+          テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+        </p>
+        <HeroSlider slides={images} />
+      </Section>
+      <Section>
+        <Heading level={3} content="見出し3" classes="mb-4" />
+        <p>
+          テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+        </p>
+      </Section>
+    </Container>
+  </Section>
+</Layout>

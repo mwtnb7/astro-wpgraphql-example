@@ -1,0 +1,59 @@
+---
+import fetchGql from '@features/wp/api/fetchGql';
+
+interface Props {
+  id: number;
+  size?: string;
+  classes?: string;
+  styles?: string;
+}
+
+const { id, size = 'large', classes = '', styles = '' } = Astro.props;
+
+let mediaItem, url, altText, srcSet, width, height;
+
+try {
+  const response = await fetchGql(
+    `query getMediaImage($id: ID!) {
+      mediaItem(id: $id, idType: DATABASE_ID) {
+        mediaItemUrl
+        altText
+        srcSet(size: ${size.toUpperCase()})
+        mediaDetails {
+          height
+          width
+        }
+      }
+    }`,
+    { id: id }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const { data } = await response.json();
+
+  if (!data || !data.mediaItem) {
+    throw new Error('No media item found.');
+  }
+
+  mediaItem = data.mediaItem;
+  url = mediaItem.mediaItemUrl;
+  altText = mediaItem.altText || '';
+  srcSet = mediaItem.srcSet || '';
+  width = mediaItem.mediaDetails?.width || '';
+  height = mediaItem.mediaDetails?.height || '';
+} catch (e) {
+  if (e instanceof Error) {
+    console.error('Error fetching media item:', e.message);
+  } else {
+    console.error('An unexpected error occurred');
+  }
+  throw new Error('Error fetching media item.');
+}
+---
+
+<p>
+  <img src={url} height={height} width={width} class={classes} style={styles} alt={altText} srcset={srcSet} />
+</p>

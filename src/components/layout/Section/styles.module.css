@@ -1,0 +1,34 @@
+/* Section.module.css */
+
+.xs {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.sm {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.md {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.lg {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.xlg {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+.top {
+  padding-bottom: 0;
+}
+
+.bottom {
+  padding-top: 0;
+}

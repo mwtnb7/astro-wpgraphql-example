@@ -1,0 +1,56 @@
+---
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+import Search from '@components/forms/Search.astro';
+
+import '../styles/global.css';
+import 'material-icons/iconfont/material-icons.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const config = {
+  title: 'Astro Demo Site',
+  description: 'Demo site for Astro.'
+};
+
+const props = Astro.props;
+
+const title = props.title ? `${props.title} | ${config.title}` : config.title;
+const description = props.description ?? config.description;
+
+const canonicalURL = Astro.url;
+const ogImage = '';
+// const favicon = "";
+
+// const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+// const ogImage = new URL(props.og?.image ?? '/og.png', Astro.url)
+// const favicon = new URL('/favicon.ico', Astro.url)
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,shrink-to-fit=no" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={config.title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <Header />
+    <Search />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

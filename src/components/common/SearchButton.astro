@@ -1,0 +1,37 @@
+---
+
+---
+
+<button class="search-button px-2 cursor-pointer hover:opacity-50 transition-opacity"></button>
+
+<script>
+  const target = document.querySelector('.site-search');
+  const button = document.querySelector('.search-button');
+
+  if (button && target) {
+    button.addEventListener('click', () => {
+      target.classList.toggle('show');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        target.classList.toggle('show');
+
+        const clearButton = document.querySelector('.pagefind-ui__search-clear') as HTMLElement;
+        clearButton?.click();
+      }
+    });
+  } else {
+    console.error("The button element '.search-button' was not found.");
+  }
+</script>
+
+<style>
+  .search-button {
+    &::before {
+      content: '\e8b6';
+      font-family: 'Material Icons';
+      font-size: 1.25rem;
+    }
+  }
+</style>

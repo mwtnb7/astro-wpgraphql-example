@@ -1,0 +1,59 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Section from '@components/layout/Section';
+import Container from '@components/layout/Container';
+import PageHeader from '@components/layout/PageHeader.astro';
+import Heading from '@components/common/Heading';
+import Pagination from '@components/ui/Pagination.astro';
+import PostItem from '@components/posts/PostItem.astro';
+import CategoryArchiveNav from '@features/news/components/CategoryArchiveNav.astro';
+import DateArchiveNav from '@features/news/components/DateArchiveNav.astro';
+import type { GetStaticPathsOptions } from 'astro';
+import type { Post } from '@features/news/types/post';
+import type { PaginationData } from '@features/news/types/archive';
+import { getAllPosts } from '@features/news/api/getAllPosts';
+
+export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
+  const posts = await getAllPosts();
+
+  // Create paginate pages
+  return paginate(posts, {
+    pageSize: 5
+  });
+};
+
+// Props
+const { page } = Astro.props as {
+  page: PaginationData;
+};
+
+// Variables
+const posts = page.data || [];
+
+// SEO
+const baseTitle = 'お知らせ';
+const baseDescription = `${baseTitle}一覧ページです。`;
+const seoTitle =
+  page.currentPage !== 1 ? `${baseTitle} | ${page.currentPage}ページ目 (${page.lastPage}ページ中)` : baseTitle;
+const seoDescription = page.currentPage !== 1 ? `${page.currentPage}ページ目 | ${baseDescription}` : baseDescription;
+---
+
+<Layout title={seoTitle} description={seoDescription}>
+  <PageHeader main="お知らせ" sub="News" />
+  <Section size="md">
+    <Container size="sm">
+      <CategoryArchiveNav />
+      <DateArchiveNav />
+      <Heading level={2} content="お知らせ一覧" classes="mb-8" />
+      {
+        posts.length === 0 ? (
+          <p class="text-center py-10">現在記事がありません。</p>
+        ) : (
+          posts.map((post: Post) => <PostItem title={post.title} href={post.uri} date={post.date} />)
+        )
+      }
+      <Pagination page={page} />
+    </Container>
+  </Section>
+</Layout>
+@components/layouts/Section@components/layouts/Container

@@ -1,0 +1,20 @@
+.container {
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.containerSm {
+  max-width: 800px;
+}
+
+.containerDefault {
+  max-width: 1140px;
+}

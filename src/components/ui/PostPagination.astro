@@ -1,0 +1,46 @@
+---
+interface Props {
+  pagination: {
+    prev?: {
+      title: string;
+      uri: string;
+    } | null;
+    next?: {
+      title: string;
+      uri: string;
+    } | null;
+  };
+}
+const { pagination } = Astro.props;
+---
+
+<div class=`flex justify-between mt-16${ !pagination.prev ? ' flex-row-reverse' : ''}`>
+  {
+    pagination.prev?.uri && (
+      <a
+        href={pagination.prev.uri}
+        aria-label="previous page"
+        class="group mr-2 flex gap-1 text-base tracking-wider text-slate-700"
+      >
+        <span class="duration-150 group-hover:text-teal-500">
+          <span class="material-icons">chevron_left</span>
+        </span>
+        <span class="duration-150 group-hover:text-teal-500"> PREV </span>
+      </a>
+    )
+  }
+  {
+    pagination.next?.uri && (
+      <a
+        href={pagination.next.uri}
+        aria-label="next page"
+        class="group ml-2 flex gap-1 text-base tracking-wider text-slate-700"
+      >
+        <span class="duration-150 group-hover:text-teal-500">NEXT</span>
+        <span class="duration-150 group-hover:text-teal-500">
+          <span class="material-icons">chevron_right</span>
+        </span>
+      </a>
+    )
+  }
+</div>

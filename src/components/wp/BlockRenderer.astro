@@ -1,0 +1,135 @@
+---
+// import ContactForm7 from './ContactForm7.tsx';
+import BlockRendererInner from './BlockRenderer.astro';
+// import Button from '@components/common/Button';
+import Heading from '@components/common/Heading';
+// import Cover from '@components/elements/Cover.astro';
+import Accordion from '@components/ui/Accordion.astro';
+import MediaImage from './MediaImage.astro';
+import getBlockStyling from '@features/wp/utils/getBlockStyling';
+import type { Block } from '@features/wp/types/gutenberg';
+import { joinClasses } from '@utils/joinClasses';
+type Props = {
+  postId: number;
+  blocks: Block[];
+};
+const { blocks, postId } = Astro.props;
+---
+
+{
+  blocks.map((block) => {
+    const { styles, classes } = getBlockStyling(block);
+
+    const attributes = block?.attributes || undefined;
+    if (!attributes) return null;
+
+    switch (block.name) {
+      // case 'contact-form-7/contact-form-selector':
+      //   console.log(block);
+      //   return <ContactForm7 client:only="react" formId={block.attributes?.id} />;
+
+      case 'acf/accordion':
+        const data = attributes.data;
+        if (!data) return null;
+
+        type AccordionItem = {
+          title: string;
+          content: string;
+        };
+
+        let result = {
+          isOpen: data.b_accordion_list_open,
+          items: [] as AccordionItem[]
+        };
+
+        const itemCount = data.b_accordion_list_items;
+
+        for (let i = 0; i < itemCount; i++) {
+          const titleKey = `b_accordion_list_items_${i}_title`;
+          const textKey = `b_accordion_list_items_${i}_text`;
+
+          if (data[titleKey] && data[textKey]) {
+            result.items.push({
+              title: data[titleKey],
+              content: data[textKey]
+            });
+          }
+        }
+
+        return (
+          <div class={classes} style={styles}>
+            {result.items.map((item) => (
+              <div>
+                <Accordion title={item.title} content={item.content} defaultOpen={result.isOpen} />
+              </div>
+            ))}
+          </div>
+        );
+      case 'core/gallery':
+        return (
+          <div style={styles} class={classes}>
+            {(block.innerBlocks || []).map((innerBlock) => (
+              <div>
+                <BlockRendererInner blocks={[innerBlock]} postId={postId} />
+              </div>
+            ))}
+          </div>
+        );
+      case 'core/image':
+        return <MediaImage id={block.attributes?.id} classes={classes} styles={styles} />;
+      case 'core/button':
+      // return (
+      //   // <Button
+      //   //   classes={classes}
+      //   //   styles={styles}
+      //   //   url={block.attributes?.url}
+      //   //   content={block.attributes?.content || ''}
+      //   // />
+      // );
+      case 'core/post-title':
+      case 'core/heading':
+        return (
+          <Heading
+            level={block.attributes?.level || 2}
+            size={block.attributes?.size === 2 ? 'lg' : 'md'}
+            classes={classes}
+            content={block.attributes?.content || ''}
+          />
+        );
+      case 'core/cover':
+      // return (
+      //   // <Cover
+      //   //   classes={classes}
+      //   //   styles={styles}
+      //   //   url={block.attributes?.url}
+      //   //   height={block.attributes?.height}
+      //   //   width={block.attributes?.width}
+      //   //   dimRatio={block.attributes?.dimRatio}
+      //   //   overlayColor={block.attributes?.overlayColor}
+      //   //   customOverlayColor={block.attributes?.customOverlayColor}
+      //   //   minHeight={block.attributes?.minHeight}
+      //   //   minHeightUnit={block.attributes?.minHeightUnit}
+      //   // />
+      // );
+      case 'core/paragraph':
+        const mergeClasses = joinClasses(classes);
+        return <p class={mergeClasses} style={styles} set:html={block.attributes?.content} />;
+      case 'core/columns':
+      case 'core/column':
+      case 'core/post-content':
+      case 'core/group':
+      case 'core/buttons':
+      case 'core/social-links':
+      case 'acf/section':
+      case 'acf/container':
+      case 'acf/post-content':
+        return (
+          <div class={classes} style={styles}>
+            <BlockRendererInner blocks={block.innerBlocks || []} postId={postId} />
+          </div>
+        );
+      default:
+        return null;
+    }
+  })
+}

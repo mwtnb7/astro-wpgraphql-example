@@ -1,0 +1,28 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Section from '@components/layout/Section';
+import PageHeader from '@components/layout/PageHeader.astro';
+---
+
+<Layout title="TaxQuery" description="">
+  <PageHeader main="制作実績" sub="Works" />
+  <Section size="lg">
+    <div class="flex space-x-6 justify-center">
+      <a
+        href="./archive/csr/"
+        class="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100"
+      >
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">SSG</h5>
+        <p class="font-normal text-gray-700 dark:text-gray-400">SSGでの検索実装サンプルです。</p>
+      </a>
+
+      <a
+        href="./archive/ssr/"
+        class="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100"
+      >
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">SSR</h5>
+        <p class="font-normal text-gray-700 dark:text-gray-400">SSRでの検索実装サンプルです。</p>
+      </a>
+    </div>
+  </Section>
+</Layout>

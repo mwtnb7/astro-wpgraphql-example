@@ -1,0 +1,16 @@
+---
+import PageNav from '@components/ui/PageNav.astro';
+import { getArchiveYearsPaths } from '../api/getArchiveYearsPaths';
+
+const years = await getArchiveYearsPaths();
+
+let links = [];
+if (years && years.length) {
+  links = years.map((year: any) => ({
+    label: year,
+    href: `/news/date/${year}/`
+  }));
+}
+---
+
+<PageNav links={links} />

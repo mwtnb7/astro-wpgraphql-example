@@ -1,0 +1,27 @@
+---
+import Image from '@components/common/Image.astro';
+
+type Props = {
+  images: {
+    mediaItemId: string;
+    mediaItemUrl: string;
+    src: string;
+    srcSet?: string;
+    altText: string;
+  }[];
+};
+
+const { images } = Astro.props as Props;
+---
+
+{
+  images.length > 0 && (
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {images.map(({ mediaItemUrl, srcSet, altText }) => (
+        <div>
+          <Image src={mediaItemUrl} {...(srcSet ? { srcset: srcSet } : {})} alt={altText ?? ''} />
+        </div>
+      ))}
+    </div>
+  )
+}

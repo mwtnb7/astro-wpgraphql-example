@@ -1,0 +1,21 @@
+---
+interface Props {
+  currentPage: number;
+  page: number;
+  href: string;
+}
+
+const { currentPage, page, href } = Astro.props as Props;
+
+const isActive = currentPage === page;
+---
+
+<a
+  href={href}
+  aria-label={`page ${page}`}
+  aria-current={isActive ? 'page' : undefined}
+  class={`flex h-8 w-8 items-center justify-center rounded-[4px] text-xl duration-150 ${
+    isActive ? 'border border-teal-500 text-teal-500' : 'text-slate-700 hover:text-teal-500'
+  }`}>
+  {page}
+</a>

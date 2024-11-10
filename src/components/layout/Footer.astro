@@ -1,0 +1,58 @@
+---
+import Logo from '@components/common/Logo.astro';
+---
+
+<footer class="px-24 py-48">
+  <div class="block lg:flex justify-between items-center">
+    <div class="w-64 m-auto lg:m-0 mb-7">
+      <Logo />
+    </div>
+    <nav>
+      <ul class="grid grid-cols-3 gap-3">
+        <li>
+          <a href="/about">下層ページ</a>
+        </li>
+        <li>
+          <a href="/news/">お知らせ</a>
+        </li>
+        <li>
+          <a href="/contact/">お問い合わせ</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="text-center pt-10">
+    <p class="text-sm">© @mwtnb7</p>
+  </div>
+</footer>
+
+<style>
+  nav li {
+    text-align: center;
+
+    a {
+      display: inline-block;
+      position: relative;
+      font-size: small;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 0;
+        height: 1px;
+        background-color: black;
+        opacity: 0.5;
+        transition: width 0.3s;
+        position: absolute;
+        bottom: -0.2em;
+        left: 0;
+      }
+
+      &:hover {
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+</style>

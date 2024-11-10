@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSlider from '@components/ui/HeroSlider.astro';
+import Section from '@components/layout/Section';
+import Container from '@components/layout/Container';
+import Heading from '@components/common/Heading';
+import Search from '@components/forms/Search.astro';
+
+// slides
+import slide01 from '../assets/images/img-photo-01.jpeg';
+import slide02 from '../assets/images/img-photo-02.jpeg';
+import slide03 from '../assets/images/img-photo-03.jpeg';
+
+const images = [slide01, slide02, slide03];
+---
+
+<Layout title="HOME" description="">
+  <Search />
+  <HeroSlider slides={images} />
+  <Section size="lg">
+    <Container>
+      <Heading level={2} classes="text-center" content="About" />
+      <p class="text-center mt-16">Astroを使用した静的サイトジェネレーターのデモサイトです。</p>
+    </Container>
+  </Section>
+</Layout>
